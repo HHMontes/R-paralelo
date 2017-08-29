@@ -1,8 +1,8 @@
-setwd("C:/Users/ASUS/Desktop/Asignaturas/Computo paralelo")
+setwd("C:/Users/ASUS/Desktop/Asignaturas/Computo paralelo/p3")
 suppressMessages(library(doParallel))
-max_nucleos<-(detectCores()-1)
+max_nucleos<-(detectCores(logical=FALSE))
 #Conteo de números según tipo.
-conteos <- function(n) {
+etiquetas <- function(n) {
   if (n == 1 || n == 2) {
     return("Trivial")
   }
@@ -16,11 +16,11 @@ conteos <- function(n) {
   }
   return("Impar primo")
 }
-desde <- 1000
-hasta <-  3000
+desde <- 10000
+hasta <-  30000
 original <- desde:hasta
 registerDoParallel(makeCluster(max_nucleos))
-o_num <- foreach(n = original, .combine=c) %dopar% conteos(n)
+o_num <- foreach(n = original, .combine=c) %dopar% etiquetas(n)
 stopImplicitCluster()
 table(o_num)
 
@@ -47,7 +47,7 @@ dif_dec_t<-rev(dif_crec_t)
 #Finalmente evaluamos los tiempos de ejecución para los diferentes
 #órdenes y considerando diversa cantidad de núcleos.
 
-nucleos<-seq(2:(detectCores(logical=FALSE) - 1))
+nucleos<-seq(2:(detectCores(logical=FALSE)))
 primo <- function(n) {
   if (n == 1 || n == 2) {
     return(TRUE)
@@ -63,7 +63,7 @@ primo <- function(n) {
   return(TRUE)
 }
 invertido <- hasta:desde
-replicas <- 5
+replicas <- 50
 m_ot <-  matrix(nrow = length(nucleos),ncol=replicas)
 m_it <-  matrix(nrow = length(nucleos),ncol=replicas)
 m_at <-  matrix(nrow = length(nucleos),ncol=replicas)
@@ -98,6 +98,7 @@ print(apply(m_it,1,summary))
 print(apply(m_at,1,summary))
 print(apply(m_dif_crec_t,1,summary))
 print(apply(m_dif_dec_t,1,summary))
+
 write.table(t(m_ot),file="m_ot.csv",sep=",",row.names = F, col.names = names_var)
 write.table(t(m_it),file="m_it.csv",sep=",",row.names = F, col.names = names_var)
 write.table(t(m_at),file="m_at.csv",sep=",",row.names = F, col.names = names_var)
