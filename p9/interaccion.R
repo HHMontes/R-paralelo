@@ -3,9 +3,8 @@ library(ggplot2)
 library(parallel)
 setwd("C:/Users/ASUS/Desktop/Asignaturas/Computo paralelo/P10")
 n <- 50
-p <- data.frame(x = rnorm(n), y=rnorm(n), c=sample(c(-1,1),n,replace = TRUE),
-                m=rgamma(n,shape =1,rate = 2))
-                #m=sample(x=c(1,2,3,4,5),size=n,replace = TRUE))
+p <- data.frame(x = rnorm(n), y=rnorm(n), c=rnorm(n),
+                m=rnorm(n))
 xmax <- max(p$x)
 xmin <- min(p$x)
 p$x <- (p$x - xmin) / (xmax - xmin) # ahora son de 0 a 1
@@ -28,7 +27,7 @@ paso <- floor(256 / 10)
 niveles <- seq(0, 255, paso)
 colores <- rgb(niveles, rep(0, 11), rev(niveles), max=255)
 eps <- 0.001
-tmax <- 10
+tmax <- 100
 replicas <- 1 
 digitos <- floor(log(tmax, 10)) + 1
 tl <- "0"
@@ -65,8 +64,8 @@ fuerza<-function(i) {
   }
   return(c(fx, fy))
 }
-for (r in 1:replicas)
-{ clusterExport(cluster,"p")
+  
+  clusterExport(cluster,"p")
   for (iter in 1:tmax) {#iter=1
     clusterExport(cluster,"fuerza")
     f<-parSapply(cluster,1:n,fuerza)
@@ -114,4 +113,3 @@ for (r in 1:replicas)
   modelo<-lm((1/p$m)~medias)
   summary(modelo)
   plot((1/p$m),medias)  
-}
