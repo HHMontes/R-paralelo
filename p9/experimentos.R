@@ -413,3 +413,18 @@ tmax<-100
   plot((1/p_6$m),d_6,main="Cargas binarias",
        xlab="Reciproco de la masa (1/m)", ylab="Dezplazamientos medios")
   graphics.off()
+  
+  modelo_1_1<-lm((1/p_1$m)~d_1)
+  summary(modelo_1_1)
+  modelo_1_2<-lm((1/p_2$m)~d_2)
+  summary(modelo_1_2)
+  
+  modelo_2_1<-lm((1/p_3$m)~d_3)
+  summary(modelo_2_1)
+  modelo_2_2<-lm((1/p_4$m)~d_4)
+  summary(modelo_2_2)
+  
+  modelo_3_1<-lm((1/p_5$m)~d_5)
+  summary(modelo_3_1)
+  modelo_3_2<-lm((1/p_6$m)~d_6)
+  summary(modelo_3_2)
